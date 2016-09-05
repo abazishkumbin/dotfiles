@@ -1,0 +1,6 @@
+; -*-scheme-*-
+; vim:ft=scheme:
+;
+; ~/.csirc
+(use parley)
+(current-input-port (make-parley-port (current-input-port)))
