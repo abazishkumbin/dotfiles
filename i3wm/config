@@ -27,10 +27,10 @@ font pango:Source Code Pro for Powerline 10
 floating_modifier $mod
 
 # New widnows will have no border
-new_window none
+new_window pixel 3
 
 # Hide vertical borders
-hide_edge_borders none
+hide_edge_borders smart
 
 # Normal borders
 bindsym $mod+t border normal
@@ -38,9 +38,11 @@ bindsym $mod+t border normal
 # Hide borders
 bindsym $mod+u border none
 
+# Turn off focus follows mouse
+focus_follows_mouse no
+
 # start a terminal
 bindsym $mod+Return exec x-terminal-emulator
-bindsym $mod+Shift+Return exec urxvt
 
 # kill focused window
 bindsym $mod+q kill
@@ -49,7 +51,7 @@ bindsym $mod+q kill
 bindsym $mod+x [urgent=latest] focus 
 
 # lock screen
-bindsym $mod+Shift+p exec --no-startup-id i3lock -t -i Pictures/wallpapers/hexagon.png
+bindsym $mod+Shift+p exec --no-startup-id gnome-screensaver-command --lock
 
 # start dmenu (a program launcher)
 bindsym $mod+Shift+d exec dmenu_run
@@ -61,14 +63,16 @@ bindsym $mod+d exec --no-startup-id i3-dmenu-desktop --dmenu='rofi -i -dmenu -fo
 # Go to Window via rofi
 bindsym $mod+g exec --no-startup-id rofi -font "snap 12" -bg "#222222" -fg "#888888" -hlbg "#285577" -hlfg "#ffffff" -opacity 90 -m 0 -location 2 -show window
 
+# Rename current workspace
 bindsym $mod+comma exec i3-input -F 'rename workspace to "%s"' -P 'New name: ' 
 
 
 # change focus
-bindsym $mod+j focus left
-bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+semicolon focus right
+
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -77,10 +81,11 @@ bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 # move focused window
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+semicolon move right
+
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
@@ -89,7 +94,7 @@ bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
-bindsym $mod+h split h
+bindsym $mod+Shift+v split h
 
 # split in vertical orientation
 bindsym $mod+v split v
@@ -142,17 +147,12 @@ bindsym $mod+Shift+0 move container to workspace number 10
 bindsym $mod+Shift+comma move workspace to output left
 bindsym $mod+Shift+period move workspace to output right
 
-# Voluem control
-bindsym XF86AudioRaiseVolume exec "amixer sset Master,0 -q 5%+"
-bindsym XF86AudioLowerVolume exec "amixer sset Master,0 -q 5%-"
-bindsym XF86AudioMute exec "amixer -q sset Master,0 toggle"
-
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit' -b 'No, power off system!' 'sudo poweroff'"
+bindsym $mod+Shift+e exec --no-startup-id  "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -162,10 +162,10 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym semicolon resize grow width 10 px or 10 ppt
+	bindsym h resize shrink width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
 
         # same bindings, but for the arrow keys
         bindsym Left resize shrink width 10 px or 10 ppt
@@ -180,35 +180,43 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-bindsym --release Print exec --no-startup-id shutter -f
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
   status_command i3blocks
   colors {
-    separator #969896
-    background #1d1f21
-    statusline #c5c8c6
-    focused_workspace #81a2be #81a2be #1d1f21
-    active_workspace #373b41 #373b41 #ffffff
-    inactive_workspace #282a2e #282a2e #969896
-    urgent_workspace #cc6666 #cc6666 #ffffff
+    separator #7d7d7d
+    background #141414
+    statusline #00b0ef
+    focused_workspace #00b0ef #141414 #00b0ef
+    active_workspace #141414 #141414 #00b0ef
+    inactive_workspace #141414 #141414 #7d7d7d
+    urgent_workspace #ff7066 #141414 #ff7066
   }
 }
+
+bindsym XF86AudioRaiseVolume exec amixer -q -D pulse set Master 5%+ unmute
+bindsym XF86AudioLowerVolume exec amixer -q -D pulse set Master 5%- unmute
+bindsym XF86AudioMute exec amixer -q -D pulse set Master toggle
+
+bindsym Print exec shutter -f -o /home/shkumbin/Pictures/Screenshots/%Y-%m-%d_%T.png
+
 # To be able to evelate priviliges in Gnome programs
  exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
  exec --no-startup-id gnome-keyring-daemon
 # Set background
- exec --no-startup-id feh --bg-scale ~/Pictures/wallpapers/default.jpg
+exec --no-startup-id feh --bg-scale ~/Pictures/wallpapers/default.jpg
 # To better handle Fn and other media keys
  exec --no-startup-id gnome-settings-daemon
+ exec --no-startup-id gnome-session
+
 # Sound Tray Applet
- exec --no-startup-id gnome-sound-applet
+ exec --no-startup-id volti
 # Network Tray Applet
  exec --no-startup-id nm-applet
 
-client.focused #81a2be #81a2be #1d1f21 #282a2e
-client.focused_inactive #373b41 #373b41 #969896 #282a2e
-client.unfocused #282a2e #282a2e #969896 #282a2e
-client.urgent #373b41 #cc6666 #ffffff #cc6666
+client.focused #00b0ef #00b0ef #141414 #ff7066
+client.focused_inactive #141414 #141414 #00b0ef #472b2a
+client.unfocused #141414 #141414 #7d7d7d #141414
+client.urgent #ff7066 #ff7066 #141414 #ff7066
